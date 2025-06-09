@@ -24,7 +24,10 @@ public class User extends BaseEntity{
     private String content;
 
     // 생성자
-
+    /**
+     * 기본 생성자 ( JPA에서 사용 )
+     */
+    public User() {}
 
     // 기능
     // 게터

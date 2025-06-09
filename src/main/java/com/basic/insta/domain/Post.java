@@ -25,6 +25,10 @@ public class Post extends BaseEntity{
     private String userName;
 
     // 생성자
+    /**
+     * 기본 생성자 ( JPA에서 사용 )
+     */
+    public Post() {}
 
 
     // 기능
