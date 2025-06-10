@@ -1,8 +1,8 @@
-package com.basic.insta.controller;
+package com.basic.insta.domain.controller;
 
-import com.basic.insta.dto.user.UserCreateRequestDto;
-import com.basic.insta.dto.user.UserCreateResponseDto;
-import com.basic.insta.service.UserService;
+import com.basic.insta.domain.dto.user.UserCreateRequestDto;
+import com.basic.insta.domain.dto.user.UserCreateResponseDto;
+import com.basic.insta.domain.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +25,12 @@ public class UserController {
     // 기능
     @PostMapping
     public ResponseEntity<?> createUserAPI(@Valid @RequestBody UserCreateRequestDto requestDto) {
+        try {
             UserCreateResponseDto responseDto = service.CreateUserService(requestDto);
             ResponseEntity<UserCreateResponseDto> response = new ResponseEntity<>(responseDto , HttpStatus.OK);
             return response;
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 }

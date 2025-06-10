@@ -1,4 +1,4 @@
-package com.basic.insta.dto.user;
+package com.basic.insta.domain.dto.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

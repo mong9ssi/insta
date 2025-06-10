@@ -1,6 +1,6 @@
-package com.basic.insta.repository;
+package com.basic.insta.domain.repository;
 
-import com.basic.insta.domain.User;
+import com.basic.insta.domain.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

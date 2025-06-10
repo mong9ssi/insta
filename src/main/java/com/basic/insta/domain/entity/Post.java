@@ -1,29 +1,29 @@
-package com.basic.insta.domain;
+package com.basic.insta.domain.entity;
 
-import com.basic.insta.dto.user.UserCreateRequestDto;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 @Entity
-@Table(name = "users")
-public class User{
+@Table(name = "posts")
+public class Post{
     // 속성
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Long postId;
 
-    @Column(nullable = false, unique = true)
-    private String userEmail;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn (name = "user_id", nullable = false)
+    private User user;
 
-    @Column(nullable = false)
-    private String password;
+    @Column (nullable = false)
+    private String title;
 
-    @Column(nullable = false)
-    private String userName;
-
-    @Column(nullable = false)
+    @Column (nullable = false)
     private String content;
+
+    @Column (nullable = false)
+    private String userName;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
@@ -56,38 +56,29 @@ public class User{
     /**
      * 기본 생성자 ( JPA에서 사용 )
      */
-    public User() {}
+    public Post() {}
 
-    public User(String userEmail, String password, String userName, String content) {
-        this.userEmail = userEmail;
-        this.password = password;
-        this.userName = userName;
-        this.content = content;
-    }
 
     // 기능
     // 게터
-    public Long getUserId() {
-        return userId;
+    public Long getPostId() {
+        return postId;
     }
 
-    public String getUserEmail() {
-        return userEmail;
+    public User getUser() {
+        return user;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getTitle() {
+        return title;
     }
 
     public String getContent() {
         return content;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public String getUserName() {
+        return userName;
     }
 
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
 }

@@ -1,6 +1,6 @@
-package com.basic.insta.dto.user;
+package com.basic.insta.domain.dto.user;
 
-import com.basic.insta.domain.User;
+import com.basic.insta.domain.entity.User;
 
 import java.time.LocalDateTime;
 

@@ -1,4 +1,4 @@
-package com.basic.insta.domain;
+package com.basic.insta.domain.entity;
 
 import jakarta.persistence.*;
 
@@ -6,24 +6,23 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 @Entity
-@Table(name = "posts")
-public class Post{
+@Table(name = "users")
+public class User{
     // 속성
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long postId;
+    private Long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn (name = "user_id", nullable = false)
-    private User user;
+    @Column(nullable = false, unique = true)
+    private String userEmail;
 
-    @Column (nullable = false)
-    private String title;
+    @Column(nullable = false)
+    private String password;
 
-    @Column (nullable = false)
-    private String content;
-
-    @Column (nullable = false)
+    @Column(nullable = false)
     private String userName;
+
+    @Column(nullable = true)
+    private String content;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
@@ -56,29 +55,38 @@ public class Post{
     /**
      * 기본 생성자 ( JPA에서 사용 )
      */
-    public Post() {}
+    public User() {}
 
+    public User(String userEmail, String password, String userName, String content) {
+        this.userEmail = userEmail;
+        this.password = password;
+        this.userName = userName;
+        this.content = content;
+    }
 
     // 기능
     // 게터
-    public Long getPostId() {
-        return postId;
+    public Long getUserId() {
+        return userId;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getContent() {
-        return content;
+    public String getUserEmail() {
+        return userEmail;
     }
 
     public String getUserName() {
         return userName;
     }
 
+    public String getContent() {
+        return content;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
 }
