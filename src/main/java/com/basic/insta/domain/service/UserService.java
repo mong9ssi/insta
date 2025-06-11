@@ -26,7 +26,7 @@ public class UserService {
      * 회원가입 기능
      */
     @Transactional
-    public UserCreateResponseDto createUserService(UserCreateRequestDto requestDto) {
+    public CreateUserResponseDto createUserService(CreateUserRequestDto requestDto) {
         String userEmail = requestDto.getUserEmail();
         String encodePassword = passwordEncoder.encode(requestDto.getPassword());
         String userName = requestDto.getUserName();
@@ -37,7 +37,7 @@ public class UserService {
         } else {
             User foundUser = new User(userEmail, encodePassword, userName, content);
             User saveUser = repository.save(foundUser);
-            UserCreateResponseDto responseDto = new UserCreateResponseDto(saveUser);
+            CreateUserResponseDto responseDto = new CreateUserResponseDto(saveUser);
             return responseDto;
         }
     }
@@ -45,11 +45,11 @@ public class UserService {
     /**
      * 회원 조회 기능
      */
-    public UserGetDetailResponseDto getDetailUserService(Long userId) {
+    public GetDetailUserResponseDto getDetailUserService(Long userId) {
         Optional<User> optionalUser = repository.findById(userId);
         if (optionalUser.isPresent()) {
             User foundUser = optionalUser.get();
-            UserGetDetailResponseDto responseDto = new UserGetDetailResponseDto(foundUser);
+            GetDetailUserResponseDto responseDto = new GetDetailUserResponseDto(foundUser);
             return responseDto;
         } else {
             throw new IllegalArgumentException("회원이 존재하지 않습니다.");
@@ -59,7 +59,8 @@ public class UserService {
     /**
      * 회원 정보 수정 기능
      */
-    public UserUpdateResponseDto updateUserService(Long userId, UserUpdateRequestDto requestDto) {
+    @Transactional
+    public UpdateUserResponseDto updateUserService(Long userId, UpdateUserRequestDto requestDto) {
         Optional<User> optionalUser = repository.findById(userId);
         if (optionalUser.isPresent()) {
             String userEmail = requestDto.getUserEmail();
@@ -67,7 +68,7 @@ public class UserService {
             User foundUser = optionalUser.get();
             if (foundUser.getUserEmail().equals(userEmail) && passwordEncoder.matches(password, foundUser.getPassword())) {
                 foundUser.updateUser(requestDto);
-                UserUpdateResponseDto responseDto = new UserUpdateResponseDto(foundUser);
+                UpdateUserResponseDto responseDto = new UpdateUserResponseDto(foundUser);
                 return responseDto;
             } else {
                 throw new IllegalArgumentException("이메일 또는 비밀번호가 맞지 않습니다.");
@@ -77,4 +78,28 @@ public class UserService {
         }
     }
 
+    /**
+     * 비밀번호 수정 기능
+     */
+    @Transactional
+    public UpdateUserPasswordResponseDto updateUserPasswordService(Long userId, UpdateUserPasswordRequestDto requestDto) {
+        Optional<User> optionalUser = repository.findById(userId);
+        if (optionalUser.isPresent()) {
+            String password = requestDto.getPassword();
+            String newPassword = requestDto.getNewPassword();
+            User foundUser = optionalUser.get();
+            if (password.equals(newPassword)) {
+                throw new IllegalArgumentException("동일한 비밀번호로 수정 불가능합니다.");
+            }
+            if (passwordEncoder.matches(password, foundUser.getPassword())) {
+                foundUser.updateUserPassword(passwordEncoder.encode(newPassword));
+                UpdateUserPasswordResponseDto responseDto = new UpdateUserPasswordResponseDto("비밀번호 변경 성공");
+                return responseDto;
+            } else {
+                throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");
+            }
+        } else {
+            throw new IllegalArgumentException("회원이 존재하지 않습니다.");
+        }
+    }
 }

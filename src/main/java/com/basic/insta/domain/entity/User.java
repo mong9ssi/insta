@@ -1,6 +1,6 @@
 package com.basic.insta.domain.entity;
 
-import com.basic.insta.domain.dto.user.UserUpdateRequestDto;
+import com.basic.insta.domain.dto.user.UpdateUserRequestDto;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -66,9 +66,13 @@ public class User{
     }
 
     // 기능
-    public void updateUser(UserUpdateRequestDto requestDto) {
+    public void updateUser(UpdateUserRequestDto requestDto) {
         this.userName = requestDto.getUserName();
         this.content = requestDto.getContent();
+    }
+
+    public void updateUserPassword(String newPassword) {
+        this.password = newPassword;
     }
 
     // 게터

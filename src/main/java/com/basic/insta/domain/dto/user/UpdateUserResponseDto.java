@@ -4,22 +4,22 @@ import com.basic.insta.domain.entity.User;
 
 import java.time.LocalDateTime;
 
-public class UserCreateResponseDto {
+public class UpdateUserResponseDto {
     // 속성
     private Long userId;
     private String userEmail;
     private String userName;
     private String content;
-    private LocalDateTime createdAt;
+    private LocalDateTime cratedAt;
     private LocalDateTime updatedAt;
 
     // 생성자
-    public UserCreateResponseDto(User user) {
+    public UpdateUserResponseDto(User user) {
         this.userId = user.getUserId();
         this.userEmail = user.getUserEmail();
         this.userName = user.getUserName();
         this.content = user.getContent();
-        this.createdAt = user.getCreatedAt();
+        this.cratedAt = user.getCreatedAt();
         this.updatedAt = user.getUpdatedAt();
     }
 
@@ -41,8 +41,8 @@ public class UserCreateResponseDto {
         return content;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public LocalDateTime getCratedAt() {
+        return cratedAt;
     }
 
     public LocalDateTime getUpdatedAt() {

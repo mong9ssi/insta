@@ -24,10 +24,10 @@ public class UserController {
      * 회원 가입 API
      */
     @PostMapping
-    public ResponseEntity<?> createUserAPI(@Valid @RequestBody UserCreateRequestDto requestDto) {
+    public ResponseEntity<?> createUserAPI(@Valid @RequestBody CreateUserRequestDto requestDto) {
         try {
-            UserCreateResponseDto responseDto = service.createUserService(requestDto);
-            ResponseEntity<UserCreateResponseDto> response = new ResponseEntity<>(responseDto , HttpStatus.OK);
+            CreateUserResponseDto responseDto = service.createUserService(requestDto);
+            ResponseEntity<CreateUserResponseDto> response = new ResponseEntity<>(responseDto , HttpStatus.OK);
             return response;
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -40,8 +40,8 @@ public class UserController {
     @GetMapping("/{userId}")
     public ResponseEntity<?> getDetailUserAPI(@PathVariable("userId") Long userId) {
         try {
-            UserGetDetailResponseDto responseDto = service.getDetailUserService(userId);
-            ResponseEntity<UserGetDetailResponseDto> response = new ResponseEntity<>(responseDto, HttpStatus.OK);
+            GetDetailUserResponseDto responseDto = service.getDetailUserService(userId);
+            ResponseEntity<GetDetailUserResponseDto> response = new ResponseEntity<>(responseDto, HttpStatus.OK);
             return response;
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -54,16 +54,35 @@ public class UserController {
     @PatchMapping("/{userId}")
     public ResponseEntity<?> updateUserAPI(
             @PathVariable("userId") Long userId,
-            @Valid @RequestBody UserUpdateRequestDto requestDto
+            @Valid @RequestBody UpdateUserRequestDto requestDto
     ) {
         try {
-            UserUpdateResponseDto responseDto = service.updateUserService(userId, requestDto);
-            ResponseEntity<UserUpdateResponseDto> response = new ResponseEntity<>(responseDto, HttpStatus.OK);
+            UpdateUserResponseDto responseDto = service.updateUserService(userId, requestDto);
+            ResponseEntity<UpdateUserResponseDto> response = new ResponseEntity<>(responseDto, HttpStatus.OK);
             return response;
         } catch (IllegalArgumentException e) {
             ResponseEntity<String> response = new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
             return response;
         }
+    }
+
+    /**
+     * 비밀번호 수정 API
+     */
+    @PatchMapping("/password/{userId}")
+    public ResponseEntity<?> updateUserPasswordAPI(
+            @PathVariable("userId") Long userId,
+            @Valid @RequestBody UpdateUserPasswordRequestDto requestDto
+    ) {
+        try {
+            UpdateUserPasswordResponseDto responseDto = service.updateUserPasswordService(userId, requestDto);
+            ResponseEntity<UpdateUserPasswordResponseDto> response = new ResponseEntity<>(responseDto, HttpStatus.OK);
+            return response;
+        } catch (IllegalArgumentException e) {
+            ResponseEntity<String> response = new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return response;
+        }
+
     }
 
 }
