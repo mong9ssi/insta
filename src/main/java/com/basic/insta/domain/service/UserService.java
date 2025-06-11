@@ -1,10 +1,8 @@
 package com.basic.insta.domain.service;
 
 import com.basic.insta.config.PasswordEncoder;
-import com.basic.insta.domain.dto.user.UserGetDetailResponseDto;
+import com.basic.insta.domain.dto.user.*;
 import com.basic.insta.domain.entity.User;
-import com.basic.insta.domain.dto.user.UserCreateRequestDto;
-import com.basic.insta.domain.dto.user.UserCreateResponseDto;
 import com.basic.insta.domain.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -53,6 +51,27 @@ public class UserService {
             User foundUser = optionalUser.get();
             UserGetDetailResponseDto responseDto = new UserGetDetailResponseDto(foundUser);
             return responseDto;
+        } else {
+            throw new IllegalArgumentException("회원이 존재하지 않습니다.");
+        }
+    }
+
+    /**
+     * 회원 정보 수정 기능
+     */
+    public UserUpdateResponseDto updateUserService(Long userId, UserUpdateRequestDto requestDto) {
+        Optional<User> optionalUser = repository.findById(userId);
+        if (optionalUser.isPresent()) {
+            String userEmail = requestDto.getUserEmail();
+            String password = requestDto.getPassword();
+            User foundUser = optionalUser.get();
+            if (foundUser.getUserEmail().equals(userEmail) && passwordEncoder.matches(password, foundUser.getPassword())) {
+                foundUser.updateUser(requestDto);
+                UserUpdateResponseDto responseDto = new UserUpdateResponseDto(foundUser);
+                return responseDto;
+            } else {
+                throw new IllegalArgumentException("이메일 또는 비밀번호가 맞지 않습니다.");
+            }
         } else {
             throw new IllegalArgumentException("회원이 존재하지 않습니다.");
         }

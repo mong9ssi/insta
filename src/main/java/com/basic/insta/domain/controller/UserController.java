@@ -1,8 +1,6 @@
 package com.basic.insta.domain.controller;
 
-import com.basic.insta.domain.dto.user.UserCreateRequestDto;
-import com.basic.insta.domain.dto.user.UserCreateResponseDto;
-import com.basic.insta.domain.dto.user.UserGetDetailResponseDto;
+import com.basic.insta.domain.dto.user.*;
 import com.basic.insta.domain.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -49,4 +47,23 @@ public class UserController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    /**
+     * 회원 정보 수정 API
+     */
+    @PatchMapping("/{userId}")
+    public ResponseEntity<?> updateUserAPI(
+            @PathVariable("userId") Long userId,
+            @Valid @RequestBody UserUpdateRequestDto requestDto
+    ) {
+        try {
+            UserUpdateResponseDto responseDto = service.updateUserService(userId, requestDto);
+            ResponseEntity<UserUpdateResponseDto> response = new ResponseEntity<>(responseDto, HttpStatus.OK);
+            return response;
+        } catch (IllegalArgumentException e) {
+            ResponseEntity<String> response = new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return response;
+        }
+    }
+
 }
