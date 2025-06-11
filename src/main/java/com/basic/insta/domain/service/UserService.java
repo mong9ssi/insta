@@ -1,12 +1,15 @@
 package com.basic.insta.domain.service;
 
 import com.basic.insta.config.PasswordEncoder;
+import com.basic.insta.domain.dto.user.UserGetDetailResponseDto;
 import com.basic.insta.domain.entity.User;
 import com.basic.insta.domain.dto.user.UserCreateRequestDto;
 import com.basic.insta.domain.dto.user.UserCreateResponseDto;
 import com.basic.insta.domain.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -25,7 +28,7 @@ public class UserService {
      * 회원가입 기능
      */
     @Transactional
-    public UserCreateResponseDto CreateUserService(UserCreateRequestDto requestDto) {
+    public UserCreateResponseDto createUserService(UserCreateRequestDto requestDto) {
         String userEmail = requestDto.getUserEmail();
         String encodePassword = passwordEncoder.encode(requestDto.getPassword());
         String userName = requestDto.getUserName();
@@ -40,4 +43,19 @@ public class UserService {
             return responseDto;
         }
     }
+
+    /**
+     * 회원 조회 기능
+     */
+    public UserGetDetailResponseDto getDetailUserService(Long userId) {
+        Optional<User> optionalUser = repository.findById(userId);
+        if (optionalUser.isPresent()) {
+            User foundUser = optionalUser.get();
+            UserGetDetailResponseDto responseDto = new UserGetDetailResponseDto(foundUser);
+            return responseDto;
+        } else {
+            throw new IllegalArgumentException("회원이 존재하지 않습니다.");
+        }
+    }
+
 }
