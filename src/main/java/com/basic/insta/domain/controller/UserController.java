@@ -85,4 +85,21 @@ public class UserController {
 
     }
 
+    /**
+     * 회원 탈퇴 API
+     */
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<?> deleteUserAPI(
+            @PathVariable("userId") Long userId,
+            @Valid @RequestBody DeleteUserRequestDto requestDto
+    ) {
+        try {
+            DeleteUserResponseDto responseDto = service.deleteUserService(userId, requestDto);
+            ResponseEntity<DeleteUserResponseDto> response = new ResponseEntity<>(responseDto, HttpStatus.OK);
+            return response;
+        } catch (IllegalArgumentException e) {
+            ResponseEntity<String> response = new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return response;
+        }
+    }
 }

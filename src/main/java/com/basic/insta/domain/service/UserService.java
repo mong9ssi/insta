@@ -45,6 +45,7 @@ public class UserService {
     /**
      * 회원 조회 기능
      */
+    @Transactional
     public GetDetailUserResponseDto getDetailUserService(Long userId) {
         Optional<User> optionalUser = repository.findById(userId);
         if (optionalUser.isPresent()) {
@@ -97,6 +98,28 @@ public class UserService {
                 return responseDto;
             } else {
                 throw new IllegalArgumentException("비밀번호가 올바르지 않습니다.");
+            }
+        } else {
+            throw new IllegalArgumentException("회원이 존재하지 않습니다.");
+        }
+    }
+
+    /**
+     * 회원 탈퇴 기능
+     */
+    @Transactional
+    public DeleteUserResponseDto deleteUserService(Long userId, DeleteUserRequestDto requestDto) {
+        Optional<User> optionalUser = repository.findById(userId);
+        if (optionalUser.isPresent()) {
+            String userEmail = requestDto.getUserEmail();
+            String password = requestDto.getPassword();
+            User foundUser = optionalUser.get();
+            if (foundUser.getUserEmail().equals(userEmail) && passwordEncoder.matches(password, foundUser.getPassword())) {
+                repository.delete(foundUser);
+                DeleteUserResponseDto responseDto = new DeleteUserResponseDto("회원탈퇴 성공");
+                return responseDto;
+            } else {
+                throw new IllegalArgumentException("이메일 또는 비밀번호가 맞지 않습니다.");
             }
         } else {
             throw new IllegalArgumentException("회원이 존재하지 않습니다.");
