@@ -23,9 +23,6 @@ public class Post{
     @Column (nullable = false)
     private String content;
 
-    @Column (nullable = false)
-    private String userName;
-
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
@@ -59,7 +56,8 @@ public class Post{
      */
     public Post() {}
 
-    public Post(CreatePostRequestDto requestDto) {
+    public Post(User user , CreatePostRequestDto requestDto) {
+        this.user = user;
         this.title = requestDto.getTitle();
         this.content = requestDto.getContent();
     }
@@ -82,8 +80,11 @@ public class Post{
         return content;
     }
 
-    public String getUserName() {
-        return userName;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
 }

@@ -38,7 +38,7 @@ public class AuthController {
 
             // 응답 헤더 설정
             HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.set("Authorization", "Bearer" + token);
+            httpHeaders.set("Authorization", "Bearer " + token);
 
             ResponseEntity<String> response = new ResponseEntity<>("로그인 성공", httpHeaders, HttpStatus.OK);
             return response;
@@ -47,7 +47,6 @@ public class AuthController {
             return response;
         }
 
-
     }
 
     /**
@@ -55,6 +54,8 @@ public class AuthController {
      */
     @PostMapping("/logout")
     public ResponseEntity<?> logoutAPI(@RequestParam String userEmail) {
+
+
         String logoutMessage = authService.logoutService(userEmail);
         ResponseEntity<String> response = new ResponseEntity<>(logoutMessage, HttpStatus.OK);
         return response;
