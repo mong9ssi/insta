@@ -25,13 +25,10 @@ public class AuthService {
      * 로그인 기능
      */
     public User loginService(LoginRequestDto requestDto) {
-        String userEmail = requestDto.getUserEmail();
-        String password = requestDto.getPassword();
-
-        User foundUser = repository.findByUserEmail(userEmail)
+        User foundUser = repository.findByUserEmail(requestDto.getUserEmail())
                 .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
 
-        if (!passwordEncoder.matches(password, foundUser.getPassword())) {
+        if (!passwordEncoder.matches(requestDto.getPassword(), foundUser.getPassword())) {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         } else {
             return foundUser;

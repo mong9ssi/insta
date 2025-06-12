@@ -30,17 +30,24 @@ public class AuthController {
      */
     @PostMapping("/login")
     public ResponseEntity<String> loginAPI(@RequestBody LoginRequestDto requestDto) {
-        // Email , Password 검증
-        User foundUser = authService.loginService(requestDto);
-        // 토큰 생성
-        String token = jwtService.createJwt(foundUser);
+        try {
+            // Email , Password 검증
+            User foundUser = authService.loginService(requestDto);
+            // 토큰 생성
+            String token = jwtService.createJwt(foundUser);
 
-        // 응답 헤더 설명
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set("Authorization", "Bearer" + token);
+            // 응답 헤더 설정
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.set("Authorization", "Bearer" + token);
 
-        ResponseEntity<String> response = new ResponseEntity<>("로그인 성공", httpHeaders, HttpStatus.OK);
-        return response;
+            ResponseEntity<String> response = new ResponseEntity<>("로그인 성공", httpHeaders, HttpStatus.OK);
+            return response;
+        } catch (RuntimeException e) {
+            ResponseEntity<String> response = new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return response;
+        }
+
+
     }
 
     /**

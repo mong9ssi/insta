@@ -4,6 +4,7 @@ import com.basic.insta.domain.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
@@ -12,15 +13,15 @@ import java.util.Date;
 @Service
 public class JwtService {
     // 속성
-    private String SECRET_KEY;
+    @Value("${jwt.secret}")
+    private String secret;
 
     /**
      * 토큰 만들기
      */
     public String createJwt(User user) {
         // 1. 서명 만들기
-        SECRET_KEY = user.getPassword();
-        SecretKey secretKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+        SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes());
 
         // 2. 데이터 준비
         String subject = user.getUserId().toString();
@@ -45,7 +46,7 @@ public class JwtService {
      */
     public long verifyToken(String token) {
         // 1. 서명 만들기
-        SecretKey secretKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+        SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes());
 
         // 2. 검증
         Claims claims = Jwts.parser()
