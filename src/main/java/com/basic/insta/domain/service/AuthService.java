@@ -24,7 +24,7 @@ public class AuthService {
     /**
      * 로그인 기능
      */
-    public String loginService(LoginRequestDto requestDto) {
+    public User loginService(LoginRequestDto requestDto) {
         String userEmail = requestDto.getUserEmail();
         String password = requestDto.getPassword();
 
@@ -34,7 +34,7 @@ public class AuthService {
         if (!passwordEncoder.matches(password, foundUser.getPassword())) {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         } else {
-            return "로그인 성공";
+            return foundUser;
         }
     }
 

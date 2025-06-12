@@ -1,5 +1,6 @@
 package com.basic.insta.domain.entity;
 
+import com.basic.insta.domain.dto.post.CreatePostRequestDto;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -58,6 +59,10 @@ public class Post{
      */
     public Post() {}
 
+    public Post(CreatePostRequestDto requestDto) {
+        this.title = requestDto.getTitle();
+        this.content = requestDto.getContent();
+    }
 
     // 기능
     // 게터

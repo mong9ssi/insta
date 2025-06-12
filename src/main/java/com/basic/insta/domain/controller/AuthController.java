@@ -1,7 +1,10 @@
 package com.basic.insta.domain.controller;
 
 import com.basic.insta.domain.dto.auth.LoginRequestDto;
+import com.basic.insta.domain.entity.User;
 import com.basic.insta.domain.service.AuthService;
+import com.basic.insta.domain.service.JwtService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,12 +13,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class AuthController {
     // 속성
-    private final AuthService service;
+    private final AuthService authService;
+    private final JwtService jwtService;
 
     // 생성자
-    public AuthController(AuthService service) {
-        this.service = service;
+    public AuthController(AuthService authService, JwtService jwtService) {
+        this.authService = authService;
+        this.jwtService = jwtService;
     }
+
 
     // 기능
 
@@ -24,8 +30,16 @@ public class AuthController {
      */
     @PostMapping("/login")
     public ResponseEntity<String> loginAPI(@RequestBody LoginRequestDto requestDto) {
-        String loginMessage = service.loginService(requestDto);
-        ResponseEntity<String> response = new ResponseEntity<>(loginMessage, HttpStatus.OK);
+        // Email , Password 검증
+        User foundUser = authService.loginService(requestDto);
+        // 토큰 생성
+        String token = jwtService.createJwt(foundUser);
+
+        // 응답 헤더 설명
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set("Authorization", "Bearer" + token);
+
+        ResponseEntity<String> response = new ResponseEntity<>("로그인 성공", httpHeaders, HttpStatus.OK);
         return response;
     }
 
@@ -34,7 +48,7 @@ public class AuthController {
      */
     @PostMapping("/logout")
     public ResponseEntity<?> logoutAPI(@RequestParam String userEmail) {
-        String logoutMessage = service.logoutService(userEmail);
+        String logoutMessage = authService.logoutService(userEmail);
         ResponseEntity<String> response = new ResponseEntity<>(logoutMessage, HttpStatus.OK);
         return response;
     }
